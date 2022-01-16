@@ -107,7 +107,6 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco
                                 try
                                 {
                                     await _webView.EnsureCoreWebView2Async(_webView2Environment);
-                                    throw new WebView2RuntimeNotFoundException();
                                     _webView.CoreWebView2.SetVirtualHostNameToFolderMapping(VirtualHostName, Settings.AssemblyDirectory, CoreWebView2HostResourceAccessKind.Allow);
                                     _webView.NavigateToString(html);
                                     _webView.NavigationCompleted += WebView2Init;
