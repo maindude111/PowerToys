@@ -19,12 +19,10 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco
             {
                 case "abap":
                     return "abap";
-                case "aes":
-                    return "aes";
+                case "azcli":
+                    return "azcli";
                 case "cls":
                     return "apex";
-
-                // TO-DO: AZCLI
                 case "bat":
                 case "cmd":
                 case "btm":
@@ -55,12 +53,16 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco
                 case "cs":
                 case "csx":
                     return "csharp";
+                case "csp":
+                    return "csp";
                 case "css":
                     return "css";
                 case "dart":
                     return "dart";
                 case "dockerfile":
                     return "dockerfile";
+                case "ecl":
+                    return "ecl";
                 case "fs":
                 case "fsi":
                 case "fsx":
@@ -70,6 +72,8 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco
                     return "go";
                 case "graphql":
                     return "graphql";
+                case "hcl":
+                    return "hcl";
                 case "html":
                 case "htm":
                     return "html";
@@ -98,18 +102,18 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco
                 case "i3":
                 case "m3":
                     return "m3";
-
-                // Markdown already implemented. Don't uncomment
-                /*
                 case "md":
                 case "markdown":
                     return "markdown";
-                */
                 case "s":
                     return "mips";
+                case "sol":
+                    return "solidity";
                 case "sql":
                     // TO-DO: differentiate the different sql languages
                     return "sql";
+                case "twig":
+                    return "twig";
                 case "m":
                 case "mm":
                     return "objective-c";
@@ -145,6 +149,8 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco
                 case "psrc":
                 case "cdxml":
                     return "powershell";
+                case "pug":
+                    return "pug";
                 case "py":
                 case "pyi":
                 case "pyc":
@@ -162,6 +168,8 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco
                 case "cshtml":
                 case "vbhtml":
                     return "razor";
+                case "rdb":
+                    return "redid";
                 case "rst":
                     return "restructuredtext";
                 case "rb":
