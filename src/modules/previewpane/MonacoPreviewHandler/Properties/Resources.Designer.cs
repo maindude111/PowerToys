@@ -61,6 +61,15 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Download WebView2 to display this file..
+        /// </summary>
+        internal static string Download_WebView2 {
+            get {
+                return ResourceManager.GetString("Download_WebView2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exception occurred:
         ///        .
         /// </summary>
@@ -86,6 +95,15 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco.Properties {
         internal static string Max_File_Size_Error {
             get {
                 return ResourceManager.GetString("Max_File_Size_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WebView2 not installed or found..
+        /// </summary>
+        internal static string WebView2_Not_Installed_Message {
+            get {
+                return ResourceManager.GetString("WebView2_Not_Installed_Message", resourceCulture);
             }
         }
     }

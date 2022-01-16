@@ -43,13 +43,6 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco
         public long MaxFileSize => _maxFileSize;
 
         /// <summary>
-        /// String which is displayed if the file is too big.
-        /// </summary>
-        private readonly string _maxFileSizeErr = Resources.Max_File_Size_Error;
-
-        public string MaxFileSizeErr => _maxFileSizeErr;
-
-        /// <summary>
         /// Gets the color of the window background.
         /// </summary>
         public Color BackgroundColor

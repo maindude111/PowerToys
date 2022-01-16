@@ -1,12 +1,14 @@
-﻿// Copyright (c) Microsoft Corporation
+// Copyright (c) Microsoft Corporation
 // The Microsoft Corporation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using Windows.System;
 using Common;
 using Microsoft.PowerToys.PreviewHandler.Monaco.Properties;
 using Microsoft.Web.WebView2.Core;
@@ -102,13 +104,39 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco
                                 html = html.Replace("[[PT_URL]]", VirtualHostName, StringComparison.InvariantCulture);
 
                                 // Initialize WebView
-                                await _webView.EnsureCoreWebView2Async(_webView2Environment);
-                                _webView.CoreWebView2.SetVirtualHostNameToFolderMapping(VirtualHostName, Settings.AssemblyDirectory, CoreWebView2HostResourceAccessKind.Allow);
-                                _webView.NavigateToString(html);
-                                _webView.NavigationCompleted += WebView2Init;
-                                _webView.Height = this.Height;
-                                _webView.Width = this.Width;
-                                Controls.Add(_webView);
+                                try
+                                {
+                                    await _webView.EnsureCoreWebView2Async(_webView2Environment);
+                                    throw new WebView2RuntimeNotFoundException();
+                                    _webView.CoreWebView2.SetVirtualHostNameToFolderMapping(VirtualHostName, Settings.AssemblyDirectory, CoreWebView2HostResourceAccessKind.Allow);
+                                    _webView.NavigateToString(html);
+                                    _webView.NavigationCompleted += WebView2Init;
+                                    _webView.Height = this.Height;
+                                    _webView.Width = this.Width;
+                                    Controls.Add(_webView);
+                                }
+                                catch (WebView2RuntimeNotFoundException e)
+                                {
+                                    // WebView2 not installed message
+                                    Label errorMessage = new Label();
+                                    errorMessage.Text = Resources.WebView2_Not_Installed_Message;
+                                    errorMessage.Width = TextRenderer.MeasureText(Resources.WebView2_Not_Installed_Message, errorMessage.Font).Width+ 10;
+                                    errorMessage.Height = TextRenderer.MeasureText(Resources.WebView2_Not_Installed_Message, errorMessage.Font).Height;
+                                    Controls.Add(errorMessage);
+                                    
+                                    // Download Link
+                                    Label downloadLink = new LinkLabel();
+                                    downloadLink.Text = Resources.Download_WebView2;
+                                    downloadLink.Click += (sender, args) =>
+                                    {
+                                        Launcher.LaunchUriAsync(new Uri("https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section"));
+                                    };
+                                    downloadLink.Top = TextRenderer.MeasureText(Resources.WebView2_Not_Installed_Message, errorMessage.Font).Height + 10;
+                                    downloadLink.Width = TextRenderer.MeasureText(Resources.Download_WebView2, errorMessage.Font).Width + 10;
+                                    downloadLink.Height = TextRenderer.MeasureText(Resources.Download_WebView2, errorMessage.Font).Height;
+                                    Controls.Add(downloadLink);
+                                }
+                                
                             });
                         });
                     });
@@ -135,7 +163,7 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco
                 InvokeOnControlThread(() =>
                 {
                     Label errorMessage = new Label();
-                    errorMessage.Text = _settings.MaxFileSizeErr;
+                    errorMessage.Text = Resources.Max_File_Size_Error;
                     errorMessage.Width = 500;
                     errorMessage.Height = 50;
                     Controls.Add(errorMessage);
