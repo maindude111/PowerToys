@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Copyright (c) Microsoft Corporation
+// The Microsoft Corporation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
 
-namespace monacoPreview
+using System.Globalization;
+
+namespace Microsoft.PowerToys.PreviewHandler.Monaco
 {
-    class FileHandler
+    public static class FileHandler
     {
         /// <summary>
         /// Converts a file extension to a language monaco id.
         /// </summary>
         /// <param name="fileExtension">The extension of the file (without the dot).</param>
         /// <returns>The monaco language id</returns>
-        public string GetLanguage(string fileExtension)
+        public static string GetLanguage(string fileExtension)
         {
-            switch (fileExtension.ToLower())
+            switch (fileExtension.ToLower(CultureInfo.InvariantCulture))
             {
                 case "abap":
                     return "abap";
@@ -21,7 +23,8 @@ namespace monacoPreview
                     return "aes";
                 case "cls":
                     return "apex";
-                // TO-DO: AZCLI 
+
+                // TO-DO: AZCLI
                 case "bat":
                 case "cmd":
                 case "btm":
@@ -95,12 +98,12 @@ namespace monacoPreview
                 case "i3":
                 case "m3":
                     return "m3";
+
                 // Markdown already implemented. Don't uncomment
                 /*
                 case "md":
                 case "markdown":
                     return "markdown";
-                    
                 */
                 case "s":
                     return "mips";

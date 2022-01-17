@@ -36,6 +36,20 @@ inline registry::ChangeSet getMdPreviewHandlerChangeSet(const std::wstring insta
                                   L".md");
 }
 
+inline registry::ChangeSet getMonacoPreviewHandlerChangeSet(const std::wstring installationDir, const bool perUser)
+{
+    using namespace registry::shellex;
+    return generatePreviewHandler(PreviewHandlerType::preview,
+                                  perUser,
+                                  L"{afbd5a44-2520-4ae0-9224-6cfce8fe4400}",
+                                  get_std_product_version(),
+                                  (fs::path{ installationDir } / LR"d(modules\FileExplorerPreview\PowerToys.MonacoPreviewHandler.comhost.dll)d").wstring(),
+                                  registry::DOTNET_COMPONENT_CATEGORY_CLSID,
+                                  L"Microsoft.PowerToys.PreviewHandler.Monaco.MonacoPreviewHandler",
+                                  L"Monaco Preview Handler",
+                                  L".cpp");
+}
+
 inline registry::ChangeSet getPdfPreviewHandlerChangeSet(const std::wstring installationDir, const bool perUser)
 {
     using namespace registry::shellex;
@@ -111,6 +125,7 @@ inline std::vector<registry::ChangeSet> getAllModulesChangeSets(const std::wstri
     constexpr bool PER_USER = true;
     return { getSvgPreviewHandlerChangeSet(installationDir, PER_USER),
              getMdPreviewHandlerChangeSet(installationDir, PER_USER),
+             getMonacoPreviewHandlerChangeSet(installationDir, PER_USER),
              getPdfPreviewHandlerChangeSet(installationDir, PER_USER),
              getGcodePreviewHandlerChangeSet(installationDir, PER_USER),
              getSvgThumbnailHandlerChangeSet(installationDir, PER_USER),

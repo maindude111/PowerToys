@@ -1,38 +1,36 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation
+// The Microsoft Corporation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Drawing;
 using System.IO;
-using System.IO.Abstractions;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Common;
+using Microsoft.PowerToys.PreviewHandler.Monaco.Properties;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
-using monacoPreview;
 using WK.Libraries.WTL;
 
-namespace MonacoPreviewHandler
+namespace Microsoft.PowerToys.PreviewHandler.Monaco
 {
     public class MonacoPreviewHandlerControl : FormHandlerControl
     {
-        /// <summary>
-        /// File system library
-        /// </summary>
-        private static readonly IFileSystem FileSystem = new FileSystem();
-
-        /// <summary>
-        /// Saves if the user already navigated to the index page
-        /// </summary>
-        private bool _hasNavigated;
-
         /// <summary>
         /// Settings class
         /// </summary>
         private readonly Settings _settings = new Settings();
 
         /// <summary>
-        /// FileHandler class
+        /// File system library.
         /// </summary>
-        private readonly FileHandler _fileHandler = new FileHandler();
+        // private static readonly IFileSystem FileSystem = new FileSystem();
+
+        /// <summary>
+        /// Saves if the user already navigated to the index page
+        /// </summary>
+        private bool _hasNavigated;
 
         /// <summary>
         /// WebView2 element
@@ -52,7 +50,7 @@ namespace MonacoPreviewHandler
         /// <summary>
         /// Name of the virtual host
         /// </summary>
-        const string VirtualHostName = "PowerToysLocalMonaco";
+        public const string VirtualHostName = "PowerToysLocalMonaco";
 
         [STAThread]
         public override void DoPreview<T>(T dataSource)
@@ -63,7 +61,7 @@ namespace MonacoPreviewHandler
             InitializeLoadingScreen();
 
             // New webview2 element
-            _webView = new Microsoft.Web.WebView2.WinForms.WebView2();
+            _webView = new WebView2();
 
             // Checks if dataSource is a string
             if (!(dataSource is string filePath))
@@ -74,7 +72,7 @@ namespace MonacoPreviewHandler
             // Check if the file is too big.
             long fileSize = new FileInfo(filePath).Length;
 
-            if (fileSize < _settings.maxFileSize)
+            if (fileSize < _settings.MaxFileSize)
             {
                 try
                 {
@@ -90,22 +88,22 @@ namespace MonacoPreviewHandler
                             InvokeOnControlThread(async () =>
                             {
                                 _webView2Environment = webView2EnvironmentAwaiter.GetResult();
-                                var vsCodeLangSet = _fileHandler.GetLanguage(Path.GetExtension(filePath).TrimStart('.'));
+                                var vsCodeLangSet = FileHandler.GetLanguage(Path.GetExtension(filePath).TrimStart('.'));
                                 var fileContent = File.ReadAllText(filePath);
                                 var base64FileCode = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(fileContent));
 
                                 // prepping index html to load in
-                                var html = File.ReadAllText(_settings.AssemblyDirectory + "\\index.html").Replace("\t", "");
+                                var html = File.ReadAllText(Settings.AssemblyDirectory + "\\index.html").Replace("\t", string.Empty, StringComparison.InvariantCulture);
 
-                                html = html.Replace("[[PT_LANG]]", vsCodeLangSet);
-                                html = html.Replace("[[PT_WRAP]]", _settings.wrap ? "1" : "0");
-                                html = html.Replace("[[PT_THEME]]", _settings.GetTheme(ThemeListener.AppMode));
-                                html = html.Replace("[[PT_CODE]]", base64FileCode);
-                                html = html.Replace("[[PT_URL]]", VirtualHostName);
+                                html = html.Replace("[[PT_LANG]]", vsCodeLangSet, StringComparison.InvariantCulture);
+                                html = html.Replace("[[PT_WRAP]]", _settings.Wrap ? "1" : "0", StringComparison.InvariantCulture);
+                                html = html.Replace("[[PT_THEME]]", _settings.GetTheme(ThemeListener.AppMode), StringComparison.InvariantCulture);
+                                html = html.Replace("[[PT_CODE]]", base64FileCode, StringComparison.InvariantCulture);
+                                html = html.Replace("[[PT_URL]]", VirtualHostName, StringComparison.InvariantCulture);
 
                                 // Initialize WebView
                                 await _webView.EnsureCoreWebView2Async(_webView2Environment);
-                                _webView.CoreWebView2.SetVirtualHostNameToFolderMapping(VirtualHostName, _settings.AssemblyDirectory, CoreWebView2HostResourceAccessKind.Allow);
+                                _webView.CoreWebView2.SetVirtualHostNameToFolderMapping(VirtualHostName, Settings.AssemblyDirectory, CoreWebView2HostResourceAccessKind.Allow);
                                 _webView.NavigateToString(html);
                                 _webView.NavigationCompleted += WebView2Init;
                                 _webView.Height = this.Height;
@@ -132,6 +130,7 @@ namespace MonacoPreviewHandler
                         Controls.Add(text);
                     });
                 }
+
                 this.Resize += FormResize;
             }
             else
@@ -139,19 +138,18 @@ namespace MonacoPreviewHandler
                 InvokeOnControlThread(() =>
                 {
                     Label errorMessage = new Label();
-                    errorMessage.Text = _settings.maxFileSizeErr;
+                    errorMessage.Text = _settings.MaxFileSizeErr;
                     errorMessage.Width = 500;
                     errorMessage.Height = 50;
                     Controls.Add(errorMessage);
                 });
-
             }
         }
 
         /// <summary>
         /// This event sets the height and width of the webview to the size of the form
         /// </summary>
-        public void FormResize(Object sender, EventArgs e)
+        public void FormResize(object sender, EventArgs e)
         {
             _webView.Height = this.Height;
             _webView.Width = this.Width;
@@ -161,7 +159,7 @@ namespace MonacoPreviewHandler
         /// This event initializes the webview and sets various settings
         /// </summary>
         [STAThread]
-        private void WebView2Init(Object sender, CoreWebView2NavigationCompletedEventArgs e)
+        private void WebView2Init(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
             // Checks if already navigated
             if (!_hasNavigated)
@@ -211,10 +209,7 @@ namespace MonacoPreviewHandler
             }
 
             // If it has navigated to index.html it stops further navigations
-            if(e.Uri == "about:blank")
-            {
-                _hasNavigated = true;
-            }
+            if (e.Uri == "about:blank")
             {
                 _hasNavigated = true;
             }
