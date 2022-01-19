@@ -869,6 +869,7 @@
                 <File Source="$(var.BinX64Dir)modules\FileExplorerPreview\Microsoft.Web.WebView2.Core.dll" />
                 <File Source="$(var.BinX64Dir)modules\FileExplorerPreview\Microsoft.Web.WebView2.WinForms.dll" />
                 <File Source="$(var.BinX64Dir)modules\FileExplorerPreview\Microsoft.Web.WebView2.Wpf.dll" />
+                <File Source="$(var.BinX64Dir)modules\FileExplorerPreview\Newtonsoft.Json.dll" />
                 <File Source="$(var.BinX64Dir)modules\FileExplorerPreview\System.Personalization.dll" />
                 <File Source="$(var.BinX64Dir)modules\FileExplorerPreview\System.Runtime.WindowsRuntime.dll" />
                 <File Source="$(var.BinX64Dir)modules\FileExplorerPreview\index.html" />

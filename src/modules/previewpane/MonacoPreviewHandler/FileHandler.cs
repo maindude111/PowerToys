@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 namespace Microsoft.PowerToys.PreviewHandler.Monaco
 {
     public static class FileHandler
-    {        
+    {
         /// <summary>
         /// Converts a file extension to a language monaco id.
         /// </summary>

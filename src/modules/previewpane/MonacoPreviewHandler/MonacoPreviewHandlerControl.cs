@@ -3,16 +3,15 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Windows.System;
 using Common;
 using Microsoft.PowerToys.PreviewHandler.Monaco.Properties;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
+using Windows.System;
 using WK.Libraries.WTL;
 
 namespace Microsoft.PowerToys.PreviewHandler.Monaco
@@ -114,28 +113,24 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco
                                     _webView.Width = this.Width;
                                     Controls.Add(_webView);
                                 }
-                                catch (WebView2RuntimeNotFoundException e)
+                                catch (WebView2RuntimeNotFoundException)
                                 {
                                     // WebView2 not installed message
                                     Label errorMessage = new Label();
                                     errorMessage.Text = Resources.WebView2_Not_Installed_Message;
-                                    errorMessage.Width = TextRenderer.MeasureText(Resources.WebView2_Not_Installed_Message, errorMessage.Font).Width+ 10;
+                                    errorMessage.Width = TextRenderer.MeasureText(Resources.WebView2_Not_Installed_Message, errorMessage.Font).Width + 10;
                                     errorMessage.Height = TextRenderer.MeasureText(Resources.WebView2_Not_Installed_Message, errorMessage.Font).Height;
                                     Controls.Add(errorMessage);
-                                    
+
                                     // Download Link
                                     Label downloadLink = new LinkLabel();
                                     downloadLink.Text = Resources.Download_WebView2;
-                                    downloadLink.Click += (sender, args) =>
-                                    {
-                                        Launcher.LaunchUriAsync(new Uri("https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section"));
-                                    };
+                                    downloadLink.Click += DownloadLink_Click;
                                     downloadLink.Top = TextRenderer.MeasureText(Resources.WebView2_Not_Installed_Message, errorMessage.Font).Height + 10;
                                     downloadLink.Width = TextRenderer.MeasureText(Resources.Download_WebView2, errorMessage.Font).Width + 10;
                                     downloadLink.Height = TextRenderer.MeasureText(Resources.Download_WebView2, errorMessage.Font).Height;
                                     Controls.Add(downloadLink);
                                 }
-                                
                             });
                         });
                     });
@@ -255,6 +250,11 @@ namespace Microsoft.PowerToys.PreviewHandler.Monaco
                 _loading.BackColor = _settings.BackgroundColor;
                 Controls.Add(_loading);
             });
+        }
+
+        private async void DownloadLink_Click(object sender, EventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section"));
         }
     }
 }
