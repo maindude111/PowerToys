@@ -128,7 +128,7 @@
             <Custom Action="TelemetryLogUninstallSuccess" After="InstallFinalize">
                 Installed and (NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")
             </Custom>
-            <Custom Action="UnApplyModulesRegistryChangeSets" Before="InstallFinalize">
+            <Custom Action="UnApplyModulesRegistryChangeSets" Before="RemoveFiles">
                 Installed AND (REMOVE="ALL")
             </Custom>
 
